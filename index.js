@@ -6,11 +6,15 @@ const { sep } = require('path');
 const { tmpdir } = require('os');
 
 //TODO docopt?
+let node8 = false;
+if (process.argv.indexOf("node8") >= 0) {
+  node8 = true;
+}
 
 // Create a temporary data directory
 let datadir = mkdtempSync(`${tmpdir()}${sep}freshr-`);
 
-console.log("the tempdir is " + datadir);
+console.log(`The freshr tempdir is ${datadir}.\n`);
 
 // Copy default RNode directory to appropriate place
 //TODO Consider generating keys dynamically instead of committing
@@ -26,4 +30,4 @@ copyFileSync(`${__dirname}${sep}bonds.txt` , `${datadir}${sep}genesis${sep}bonds
 // Start node
 //TODO move --has-faucet to rnode.toml
 // The line `has-faucet = true` doesn't seem to work under [server] or [validators]
-execSync(`rnode run --has-faucet --data-dir ${datadir}`, { stdio: 'inherit' });
+execSync(`rnode run --has-faucet --data${node8?'-':'_'}dir ${datadir}`, { stdio: 'inherit' });

@@ -5,9 +5,10 @@ Start a fresh RNode with casper
 
 Usage
 -----------
-`freshr` That's it.
+`freshr` That's it. Now you've got a casper node to develop your dapps against.
 
-Now you've got a casper node to develop your dapps against.
+`freshr node8`
+If you're targeting the upcoming node 0.8 release.
 
 Installation
 --------------
