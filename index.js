@@ -5,11 +5,6 @@ const { copyFileSync, mkdtempSync, mkdirSync } = require('fs');
 const { sep } = require('path');
 const { tmpdir } = require('os');
 
-//TODO docopt?
-let node8 = false;
-if (process.argv.indexOf("node8") >= 0) {
-  node8 = true;
-}
 
 // Create a temporary data directory
 let datadir = mkdtempSync(`${tmpdir()}${sep}freshr-`);
@@ -27,7 +22,15 @@ copyFileSync(`${__dirname}${sep}bonds.txt` , `${datadir}${sep}genesis${sep}bonds
 // on the fly, but would also require generating the bonds file on the fly
 
 
-// Start node
-//TODO move --has-faucet to rnode.toml
-// The line `has-faucet = true` doesn't seem to work under [server] or [validators]
-execSync(`rnode run --has-faucet --data${node8?'-':'_'}dir ${datadir}`, { stdio: 'inherit' });
+// Construct the rnode command
+let command;
+if (process.argv.indexOf("legacy") >= 0) {
+  // --has-faucet didn't work in toml file in old rnode versions
+  command = `rnode run --has-faucet --data_dir ${datadir}`;
+}
+else {
+  command = `rnode run --data-dir ${datadir}`;
+}
+
+// Start the RNode
+const rnodeProcess = execSync(command, { stdio: 'inherit' });
